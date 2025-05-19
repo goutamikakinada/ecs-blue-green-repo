@@ -5,29 +5,23 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws --version
-      - $(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com)
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 714223118758.dkr.ecr.us-east-1.amazonaws.com
+
   build:
     commands:
       - echo Build started on `date`
-      - echo Building Docker image...
-      - docker build -t $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION .
-      - docker tag $IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
+      - echo Building the Docker image...
+      - docker build -t node-js .
+      - docker tag node-js:latest 714223118758.dkr.ecr.us-east-1.amazonaws.com/node-js:latest
+
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$CODEBUILD_RESOLVED_SOURCE_VERSION
-      - echo Writing image definitions file...
-      - |
-        printf '[
-          {
-            "name": "%s",
-            "imageUri": "%s.dkr.ecr.%s.amazonaws.com/%s:%s"
-          }
-        ]' "$CONTAINER_NAME" "$AWS_ACCOUNT_ID" "$AWS_REGION" "$IMAGE_REPO_NAME" "$CODEBUILD_RESOLVED_SOURCE_VERSION" > imagedefinitions.json
+      - echo Pushing the Docker image to ECR...
+      - docker push 714223118758.dkr.ecr.us-east-1.amazonaws.com/node-js:latest
+      - echo Writing imagedefinitions.json for ECS deployment...
+      - printf '[{"name":"node-js","imageUri":"714223118758.dkr.ecr.us-east-1.amazonaws.com/node-js:latest"}]' > imagedefinitions.json
 
 artifacts:
   files:
     - imagedefinitions.json
-    - appspec.yml
-    - taskdef.json
