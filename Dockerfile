@@ -1,5 +1,4 @@
-# Use base image from ECR or public Node.js LTS
-FROM 714223118758.dkr.ecr.us-east-1.amazonaws.com/node-base:18
+FROM node:18
 
 # Set working directory
 WORKDIR /usr/src/app
