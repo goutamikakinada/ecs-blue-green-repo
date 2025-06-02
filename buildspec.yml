@@ -21,7 +21,8 @@ phases:
       - docker push 714223118758.dkr.ecr.us-east-1.amazonaws.com/node-js:latest
       - echo Writing imagedefinitions.json for ECS deployment...
       - printf '[{"name":"node-js","imageUri":"714223118758.dkr.ecr.us-east-1.amazonaws.com/node-js:latest"}]' > imagedefinitions.json
-
+      - echo "Build phase - nothing to compile for ECS"
 artifacts:
   files:
     - imagedefinitions.json
+    - appspec.yaml
