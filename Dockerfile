@@ -1,19 +1,18 @@
-FROM node:18
+# Use Node.js 18 image from AWS Public ECR instead of Docker Hub
+FROM public.ecr.aws/docker/library/node:18
 
-# Set working directory
-WORKDIR /usr/src/app
+# Set working directory (example)
+WORKDIR /app
 
-# Copy dependency files
+# Copy package.json and install dependencies
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy rest of the app
+# Copy app source code
 COPY . .
 
-# Expose app port
+# Expose the port your app runs on
 EXPOSE 3000
 
-# Start app
-CMD [ "npm", "start" ]
+# Command to run your app
+CMD ["node", "index.js"]
