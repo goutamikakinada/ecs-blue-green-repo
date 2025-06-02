@@ -1,9 +1,0 @@
-version: 0.0
-Resources:
-  - TargetService:
-      Type: AWS::ECS::Service
-      Properties:
-        TaskDefinition: arn:aws:ecs:us-east-1:714223118758:task-definition/TD-ECS:1
-        LoadBalancerInfo:
-          ContainerName: "node-js"
-          ContainerPort: 3000
